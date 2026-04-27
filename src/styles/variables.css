@@ -1,0 +1,13 @@
+:root {
+
+    --color-white: #ffffff;
+    --color-black: #000000;
+
+    /* Backgrounds */
+    --color-bg-sidebar-hover: #4a627a;
+    --color-bg-sidebar: #34495e;
+    --color-bg-sidebar-dark: #2c3e50;
+
+    /* Color text */
+    --color-text-white: #ecf0f1;
+}

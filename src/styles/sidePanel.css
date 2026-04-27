@@ -1,0 +1,84 @@
+.side-panel {
+    max-width: 250px;
+    background-color: var(--color-bg-sidebar-dark);
+    transition: width .3s ease;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#toggle-button {
+    background-color: var(--color-bg-sidebar);
+    color: var(--color-white);
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    margin: 0;
+    text-align: center;
+    font-size: 1em;
+}
+
+#toggle-button:hover{
+    background-color: var(--color-bg-sidebar-hover);
+}
+
+.month-selector {
+    padding: 20px;
+    border-bottom: 1px solid var(--color-bg-sidebar);
+}
+
+
+.month-selector h3 {
+    margin: 0 0 15px;
+    color: var(--color-text-white);
+    font-size: 1.1em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.month-select,.year-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-bg-sidebar);
+    color: var(--color-text-white);
+    font-size: 1em;
+    cursor: pointer;
+    transition: var(--color-bg-sidebar-dark) .2s ease
+}
+
+.month-select:hover, .year-select:hover {
+    background-color: var(--color-bg-sidebar-hover)
+}
+
+.month-select:focus, .year-select:focus {
+    outline: 2px solid #3498db;
+    background-color: var(--color-bg-sidebar-hover)
+}
+
+.nav{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.nav-item {
+    padding: 15px 20px;
+    text-decoration: none;
+    color: var(--color-text-white);
+    transition: var(--color-bg-sidebar-hover) .2s ease;
+    border-left: 3px solid transparent
+}
+
+.nav-item:hover {
+    background-color: var(--color-bg-sidebar);
+}
+
+.nav-item.active {
+    background-color: var(--color-bg-sidebar);
+    border-left-color: #3498db;
+    font-weight: 700
+}

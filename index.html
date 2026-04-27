@@ -9,7 +9,39 @@
 </head>
 
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <button id="open-button" class="hidden">→</button>
+        <div class="side-panel">
+            <button id="toggle-button">☰</button>
+            <div class="month-selector">
+                <h3>Period</h3>
+                <select name="month-select" class="month-select" id="month-select">
+                    <option value="0">January</option>
+                    <option value="1">February</option>
+                    <option value="2">March</option>
+                    <option value="3">April</option>
+                    <option value="4">May</option>
+                    <option value="5">June</option>
+                    <option value="6">July</option>
+                    <option value="7">August</option>
+                    <option value="8">September</option>
+                    <option value="9">October</option>
+                    <option value="10">November</option>
+                    <option value="11">December</option>
+                </select>
+
+                <select name="year-select" class="year-select" id="year-select">
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                </select>
+            </div>
+            <div class="nav">
+                <a href="#" id="nav-project" class="nav-item active">Project</a>
+                <a href="#" id="nav-project" class="nav-item">Employees</a>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="src/js/main.js"></script>
 </body>
