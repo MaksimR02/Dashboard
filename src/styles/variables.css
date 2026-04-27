@@ -7,6 +7,10 @@
     --color-bg-sidebar-hover: #4a627a;
     --color-bg-sidebar: #34495e;
     --color-bg-sidebar-dark: #2c3e50;
+    --color-green: #27ae60;
+    --color-bg-green-hover: #218838;
+    --color-bg-green: #28a745;
+    --color-red: #e74c3c;
 
     /* Color text */
     --color-text-white: #ecf0f1;

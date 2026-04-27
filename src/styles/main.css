@@ -1,6 +1,7 @@
 @import url(reset.css);
 @import url(variables.css);
 @import url(sidePanel.css);
+@import url(mainContent.css);
 
 
 
@@ -14,7 +15,10 @@
 
 body {
     font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
     height: 100vh;
     overflow: hidden;
+}
+
+.app{
+    display: flex;
 }
