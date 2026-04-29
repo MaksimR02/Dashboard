@@ -10,9 +10,9 @@
 
 <body>
     <div id="app" class="app">
-        <button id="open-button" class="hidden">→</button>
+        <button id="open-button" class="open-button hidden">→</button>
         <div class="side-panel">
-            <button id="toggle-button">☰</button>
+            <button id="toggle-button" class="toggle-button">☰</button>
             <div class="month-selector">
                 <h3>Period</h3>
                 <select name="month-select" class="month-select" id="month-select">
@@ -38,12 +38,12 @@
             </div>
             <div class="nav">
                 <a href="#" id="nav-project" class="nav-item active">Project</a>
-                <a href="#" id="nav-project" class="nav-item">Employees</a>
+                <a href="#" id="nav-project-employees" class="nav-item">Employees</a>
             </div>
         </div>
 
         <div class="main-content">
-            <div class="project-content">
+            <div id="project-content" class="project-content">
                 <div class="content-header">
                     <h1>Projects</h1>
                     <div class="">
@@ -52,57 +52,57 @@
                     </div>
                 </div>
 
-                <div id="projects-table" class="projects-table">
-                    <table id="projects-table" class="projects-table">
-                        <thead>
-                            <tr>
-                                <th class="sortable filterable" data-sort="companyName" data-filter="companyName">
-                                    Company Name
-                                    <span class="sort-icon">⇅</span>
-                                    <span class="filter-icon" title="Filter">⌀</span>
-                                </th>
 
-                                <th class="sortable filterable" data-sort="projectName" data-filter="projectName">
-                                    Project Name
-                                    <span class="sort-icon">⇅</span>
-                                    <span class="filter-icon" title="Filter">⌀</span>
-                                </th>
+                <table id="projects-table" class="projects-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable filterable" data-sort="companyName" data-filter="companyName">
+                                Company Name
+                                <span class="sort-icon">⇅</span>
+                                <span class="filter-icon" title="Filter">⌀</span>
+                            </th>
 
-                                <th class="sortable" data-sort="budget">
-                                    Budget
-                                    <span class="sort-icon">⇅</span>
-                                </th>
+                            <th class="sortable filterable" data-sort="projectName" data-filter="projectName">
+                                Project Name
+                                <span class="sort-icon">⇅</span>
+                                <span class="filter-icon" title="Filter">⌀</span>
+                            </th>
 
-                                <th class="sortable" data-sort="employeeCapacity">
-                                    Employee Capacity
-                                    <span class="sort-icon">⇅</span>
-                                </th>
+                            <th class="sortable" data-sort="budget">
+                                Budget
+                                <span class="sort-icon">⇅</span>
+                            </th>
 
-                                <th>
-                                    Employees
-                                </th>
+                            <th class="sortable" data-sort="employeeCapacity">
+                                Employee Capacity
+                                <span class="sort-icon">⇅</span>
+                            </th>
 
-                                <th class="sortable" data-sort="estimatedIncome">
-                                    Estimated Income
-                                    <span class="sort-icon">⇅</span>
-                                </th>
+                            <th>
+                                Employees
+                            </th>
 
-                                <th>
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
+                            <th class="sortable" data-sort="estimatedIncome">
+                                Estimated Income
+                                <span class="sort-icon">⇅</span>
+                            </th>
 
-                        <tbody></tbody>
-                    </table>
-                </div>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody></tbody>
+                </table>
+
                 <div id="projects-total-income" class="total-income-info">
                     <strong>Total Estimated Income:</strong>
                     <span class="total-amount positive-income">$0.00</span>
                 </div>
             </div>
 
-            <div id="employees-content" class="employees-content">
+            <div id="employees-content" class="employees-content hidden">
                 <div class="content-header">
                     <h1>Employees</h1>
 
