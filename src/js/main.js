@@ -1,3 +1,10 @@
+import { getCurrentMonthData } from './storage/storage.js';
+
+const currentMonthData = getCurrentMonthData();
+
+console.log(currentMonthData);
+
+
 const sidePanel = document.querySelector(".side-panel");
 const toggleButton = document.querySelector("#toggle-button");
 const openButton = document.querySelector("#open-button");
@@ -17,7 +24,7 @@ openButton.addEventListener("click", () => {
   sidePanel.classList.remove("collapsed");
 });
 
-projectButton.addEventListener("click", () => {
+projectButton.addEventListener("click", (event) => {
   event.preventDefault();
 
   employeesContent.classList.add("hidden");
@@ -26,7 +33,7 @@ projectButton.addEventListener("click", () => {
   projectButton.classList.add("active");
 });
 
-employeesButton.addEventListener("click", () => {
+employeesButton.addEventListener("click", (event) => {
   event.preventDefault();
 
   projectContent.classList.add("hidden");
