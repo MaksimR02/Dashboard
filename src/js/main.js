@@ -1,3 +1,6 @@
+import { getCurrentMonthData } from "./storage/storage.js";
+import { appState, setCurrentMonth, setCurrentYear } from "./state/appState.js";
+
 const sidePanel = document.querySelector(".side-panel");
 const toggleButton = document.querySelector("#toggle-button");
 const openButton = document.querySelector("#open-button");
@@ -6,6 +9,9 @@ const projectContent = document.querySelector("#project-content");
 const employeesContent = document.querySelector("#employees-content");
 const employeesButton = document.querySelector("#nav-project-employees");
 const projectButton = document.querySelector("#nav-project");
+
+const monthSelect = document.querySelector("#month-select");
+const yearSelect = document.querySelector("#year-select");
 
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
@@ -17,7 +23,7 @@ openButton.addEventListener("click", () => {
   sidePanel.classList.remove("collapsed");
 });
 
-projectButton.addEventListener("click", () => {
+projectButton.addEventListener("click", (event) => {
   event.preventDefault();
 
   employeesContent.classList.add("hidden");
@@ -26,11 +32,32 @@ projectButton.addEventListener("click", () => {
   projectButton.classList.add("active");
 });
 
-employeesButton.addEventListener("click", () => {
+employeesButton.addEventListener("click", (event) => {
   event.preventDefault();
 
   projectContent.classList.add("hidden");
   employeesContent.classList.remove("hidden");
   projectButton.classList.remove("active");
   employeesButton.classList.add("active");
+});
+
+monthSelect.value = appState.currentMonth;
+yearSelect.value = appState.currentYear;
+
+getCurrentMonthData();
+
+monthSelect.addEventListener("change", () => {
+  setCurrentMonth(monthSelect.value);
+
+  const selectedPeriodData = getCurrentMonthData();
+
+  console.log("selected period data", selectedPeriodData);
+});
+
+yearSelect.addEventListener("change", () => {
+  setCurrentYear(yearSelect.value);
+
+  const selectedPeriodData = getCurrentMonthData();
+
+  console.log("selected period data", selectedPeriodData);
 });
