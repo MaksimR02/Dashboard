@@ -6,5 +6,13 @@ export const appState = {
 };
 
 export function getCurrentMonthKey() {
-    return `${appState.currentYear}-${appState.currentMonth}`    
+    return `${appState.currentYear}-${appState.currentMonth}`;
+}
+
+export function setCurrentMonth(month) {
+    appState.currentMonth = Number(month);
+}
+
+export function setCurrentYear(year) {
+    appState.currentYear = Number(year);
 }
