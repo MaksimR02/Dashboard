@@ -1,7 +1,24 @@
 @import url(reset.css);
+@import url(variables.css);
+@import url(sidePanel.css);
+@import url(mainContent.css);
 
 
 
 * {
     box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
+}
+
+body {
+    font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app{
+    display: flex;
 }
