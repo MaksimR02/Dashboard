@@ -1,5 +1,6 @@
 import { getCurrentMonthData } from "./storage/storage.js";
 import { appState, setCurrentMonth, setCurrentYear } from "./state/appState.js";
+import {seedCurrentMonthData} from './services/seedService.js'
 
 const sidePanel = document.querySelector(".side-panel");
 const toggleButton = document.querySelector("#toggle-button");
@@ -12,6 +13,8 @@ const projectButton = document.querySelector("#nav-project");
 
 const monthSelect = document.querySelector("#month-select");
 const yearSelect = document.querySelector("#year-select");
+
+const seedDataButton = document.querySelector('#seed-data-btn');
 
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
@@ -60,4 +63,10 @@ yearSelect.addEventListener("change", () => {
   const selectedPeriodData = getCurrentMonthData();
 
   console.log("selected period data", selectedPeriodData);
+});
+
+seedDataButton.addEventListener('click', ()=>{
+    const seededData = seedCurrentMonthData();
+
+    console.log('seed data added:', seededData)
 });
