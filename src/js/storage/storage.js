@@ -7,7 +7,17 @@ export function getMonthlyData() {
     if(!data){
         return {};
     }
-    return JSON.parse(data);
+   try {
+    const parsedData = JSON.parse(data);
+    if (!parsedData || typeof parsedData !== 'object' || Array.isArray(parsedData)) {
+        return {};
+    }
+    return parsedData;
+   } catch(error){
+    console.warn('Invalid monthlyData in localStorage. Storage was reset.', error);
+    localStorage.removeItem(STORAGE_KEY);
+    return {};
+   }
 }
 
 export function saveMonthlyData(data) {
@@ -34,4 +44,21 @@ export function saveCurrentMonthData(monthData) {
 
     monthlyData[monthKey] = monthData;
     saveMonthlyData(monthlyData);
+}
+
+export function clearMonthlyData() {
+    localStorage.removeItem(STORAGE_KEY);
+}
+
+export function resetCurrentMonthData() {
+    const monthlyData =  getMonthlyData();
+    const monthKey = getCurrentMonthKey();
+
+    monthlyData[monthKey] = {
+        projects: [],
+        employees: [],
+    };
+    saveMonthlyData(monthlyData);
+
+    return monthlyData[monthKey];
 }
