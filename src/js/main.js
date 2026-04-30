@@ -5,6 +5,9 @@ import { renderProjectsTable } from './ui/renderProjectsTable.js';
 import {renderEmployeesTable} from './ui/renderEmployeesTable.js'
 
 
+
+
+
 const sidePanel = document.querySelector(".side-panel");
 const toggleButton = document.querySelector("#toggle-button");
 const openButton = document.querySelector("#open-button");
