@@ -2,6 +2,7 @@ import { getCurrentMonthData } from "./storage/storage.js";
 import { appState, setCurrentMonth, setCurrentYear } from "./state/appState.js";
 import {seedCurrentMonthData} from './services/seedService.js'
 import { renderProjectsTable } from './ui/renderProjectsTable.js';
+import {renderEmployeesTable} from './ui/renderEmployeesTable.js'
 
 
 const sidePanel = document.querySelector(".side-panel");
@@ -20,7 +21,8 @@ const seedDataButton = document.querySelector('#seed-data-btn');
 
 
 const initialMonthData = getCurrentMonthData();
-renderProjectsTable(initialMonthData) ;
+renderProjectsTable(initialMonthData);
+renderEmployeesTable(initialMonthData);
 
 
 toggleButton.addEventListener("click", () => {
@@ -62,6 +64,7 @@ monthSelect.addEventListener("change", () => {
   const selectedPeriodData = getCurrentMonthData();
 
   renderProjectsTable(selectedPeriodData);
+  renderEmployeesTable(selectedPeriodData);
 
   console.log("selected period data", selectedPeriodData);
 });
@@ -72,6 +75,7 @@ yearSelect.addEventListener("change", () => {
   const selectedPeriodData = getCurrentMonthData();
 
   renderProjectsTable(selectedPeriodData);
+  renderEmployeesTable(selectedPeriodData);
 
   console.log("selected period data", selectedPeriodData);
 });
@@ -80,6 +84,9 @@ seedDataButton.addEventListener('click', ()=>{
     const seededData = seedCurrentMonthData();
 
     renderProjectsTable(seededData);
+    renderEmployeesTable(seededData);
 
-    console.log('seed data added:', seededData)
+    console.log('seed data added:', seededData);
 });
+
+
