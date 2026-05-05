@@ -48,6 +48,51 @@
                     <h1>Projects</h1>
                     <div class="">
                         <button id="add-project-btn" class="add-btn">+Add Project</button>
+                        
+                        <div id="project-modal" class="modal hidden">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2>Add Project</h2>
+                                    <button type="button" id="close-project-modal-btn" class="modal-close-btn">
+                                        ×
+                                    </button>
+                                </div>
+
+                                <form id="project-form" class="modal-form">
+                                    <label class="form-field">
+                                        <span>Company Name</span>
+                                        <input type="text" id="project-company-name" name="companyName" required />
+                                    </label>
+
+                                    <label class="form-field">
+                                        <span>Project Name</span>
+                                        <input type="text" id="project-name" name="projectName" required />
+                                    </label>
+
+                                    <label class="form-field">
+                                        <span>Budget</span>
+                                        <input type="number" id="project-budget" name="budget" min="0" required />
+                                    </label>
+
+                                    <label class="form-field">
+                                        <span>Employee Capacity</span>
+                                        <input type="number" id="project-employee-capacity" name="employeeCapacity"
+                                            min="1" required />
+                                    </label>
+
+                                    <div class="modal-actions">
+                                        <button type="button" id="cancel-project-modal-btn" class="secondary-btn">
+                                            Cancel
+                                        </button>
+
+                                        <button type="submit" class="primary-btn">
+                                            Save Project
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
                         <button id="seed-data-btn" class="add-btn">Seed Data</button>
                     </div>
                 </div>
