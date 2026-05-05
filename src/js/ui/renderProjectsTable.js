@@ -1,3 +1,8 @@
+import {
+  calculateProjectFinancials,
+  calculateTotalEstimatedIncome,
+} from "../utils/calculations.js";
+
 function getAssignedEmployees(projectId, employees) {
   const assignedEmployees = [];
 
@@ -16,54 +21,39 @@ function getAssignedEmployees(projectId, employees) {
   return assignedEmployees;
 }
 
-function getUsedCapacity(projectId, employees) {
-  let totalCapacity = 0;
-
-  employees.forEach((employee) => {
-    if (!employee.assignments) {
-      return;
-    }
-
-    employee.assignments.forEach((assignment) => {
-      if (assignment.projectId === projectId) {
-        totalCapacity += assignment.capacity;
-      }
-    });
-  });
-
-  return totalCapacity;
-}
-
 function formatMoney(value) {
   return `$${Number(value).toFixed(2)}`;
 }
 
 export function renderProjectsTable(monthData) {
-  const tableBody = document.querySelector('#projects-table tbody');
+  const tableBody = document.querySelector("#projects-table tbody");
 
   if (!tableBody) {
     return;
   }
 
-  tableBody.innerHTML = '';
+  tableBody.innerHTML = "";
 
   monthData.projects.forEach((project) => {
-    const assignedEmployees = getAssignedEmployees(project.id, monthData.employees);
-    const usedCapacity = getUsedCapacity(project.id, monthData.employees);
+    const assignedEmployees = getAssignedEmployees(
+      project.id,
+      monthData.employees,
+    );
+    const projectFinancials = calculateProjectFinancials(project, monthData);
 
-    const row = document.createElement('tr');
+    const row = document.createElement("tr");
 
     row.innerHTML = `
       <td>${project.companyName}</td>
       <td>${project.projectName}</td>
       <td>${formatMoney(project.budget)}</td>
-      <td>${usedCapacity.toFixed(1)} / ${project.employeeCapacity}</td>
+      <td>${projectFinancials.usedCapacity.toFixed(1)} / ${project.employeeCapacity}</td>
       <td>
         <button type="button" class="show-employees-btn">
           Show Employees (${assignedEmployees.length})
         </button>
       </td>
-      <td>$0.00</td>
+      <td>${formatMoney(projectFinancials.income)}</td>
       <td>
         <button type="button" class="delete-btn">
           Delete
@@ -73,4 +63,14 @@ export function renderProjectsTable(monthData) {
 
     tableBody.append(row);
   });
+
+  const totalIncomeElement = document.querySelector(
+    "#projects-total-income .total-amount",
+  );
+
+  if (totalIncomeElement) {
+    const totalEstimatedIncome = calculateTotalEstimatedIncome(monthData);
+
+    totalIncomeElement.textContent = formatMoney(totalEstimatedIncome);
+  }
 }

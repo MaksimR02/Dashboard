@@ -1,3 +1,8 @@
+import {
+  calculateEmployeeEstimatedPayment,
+  calculateEmployeeProjectedIncome,
+} from "../utils/calculations.js";
+
 function getAge(dateOfBirth) {
   const birthDate = new Date(dateOfBirth);
   const currentDate = new Date();
@@ -6,10 +11,8 @@ function getAge(dateOfBirth) {
 
   const isBirthdayNotPassed =
     currentDate.getMonth() < birthDate.getMonth() ||
-    (
-      currentDate.getMonth() === birthDate.getMonth() &&
-      currentDate.getDate() < birthDate.getDate()
-    );
+    (currentDate.getMonth() === birthDate.getMonth() &&
+      currentDate.getDate() < birthDate.getDate());
 
   if (isBirthdayNotPassed) {
     age -= 1;
@@ -30,7 +33,9 @@ function getEmployeeProjects(employee, projects) {
   }
 
   employee.assignments.forEach((assignment) => {
-    const project = projects.find((project) => project.id === assignment.projectId);
+    const project = projects.find(
+      (project) => project.id === assignment.projectId,
+    );
 
     if (project) {
       employeeProjects.push(project.projectName);
@@ -41,19 +46,25 @@ function getEmployeeProjects(employee, projects) {
 }
 
 export function renderEmployeesTable(monthData) {
-  const tableBody = document.querySelector('#employees-table tbody');
+  const tableBody = document.querySelector("#employees-table tbody");
 
   if (!tableBody) {
     return;
   }
 
-  tableBody.innerHTML = '';
+  tableBody.innerHTML = "";
 
   monthData.employees.forEach((employee) => {
     const employeeProjects = getEmployeeProjects(employee, monthData.projects);
-    const projectNames = employeeProjects.join(', ') || '-';
+    const projectNames = employeeProjects.join(", ") || "-";
 
-    const row = document.createElement('tr');
+    const estimatedPayment = calculateEmployeeEstimatedPayment(employee);
+    const projectedIncome = calculateEmployeeProjectedIncome(
+      employee,
+      monthData,
+    );
+
+    const row = document.createElement("tr");
 
     row.innerHTML = `
       <td>${employee.name}</td>
@@ -61,9 +72,9 @@ export function renderEmployeesTable(monthData) {
       <td>${getAge(employee.dateOfBirth)}</td>
       <td>${employee.position}</td>
       <td>${formatMoney(employee.salary)}</td>
-      <td>$0.00</td>
+      <td>${formatMoney(estimatedPayment)}</td>
       <td>${projectNames}</td>
-      <td>$0.00</td>
+      <td>${formatMoney(projectedIncome)}</td>
       <td>
         <button type="button" class="delete-btn">
           Delete
