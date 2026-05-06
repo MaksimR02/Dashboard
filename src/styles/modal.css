@@ -60,7 +60,8 @@
   font-weight: 600;
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   padding: 10px 12px;
   border: 1px solid #cfd8dc;
   border-radius: 4px;
