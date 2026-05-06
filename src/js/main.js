@@ -92,6 +92,18 @@ let assigningEmployeeId = null;
 
 
 
+const projectEmployeesModal = document.querySelector("#project-employees-modal");
+const projectEmployeesModalTitle = document.querySelector(
+  "#project-employees-modal-title",
+);
+const projectEmployeesList = document.querySelector("#project-employees-list");
+const closeProjectEmployeesModalButton = document.querySelector(
+  "#close-project-employees-modal-btn",
+);
+const cancelProjectEmployeesModalButton = document.querySelector(
+  "#cancel-project-employees-modal-btn",
+);
+
 
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
@@ -404,6 +416,15 @@ function deleteEmployee(employeeId) {
 }
 
 projectsTable.addEventListener("click", (event) => {
+  const showEmployeesButton = event.target.closest(".show-employees-btn");
+
+  if (showEmployeesButton) {
+    const projectId = showEmployeesButton.dataset.projectId;
+
+    openProjectEmployeesModal(projectId);
+    return;
+  }
+
   const editButton = event.target.closest(".edit-project-btn");
 
   if (editButton) {
@@ -616,3 +637,90 @@ function removeAssignment(employeeId, projectId) {
   renderProjectsTable(monthData);
   renderEmployeesTable(monthData);
 }
+
+function openProjectEmployeesModal(projectId) {
+  const monthData = getCurrentMonthData();
+
+  const project = monthData.projects.find((project) => {
+    return project.id === projectId;
+  });
+
+  if (!project) {
+    return;
+  }
+
+  projectEmployeesModalTitle.textContent = `Employees on ${project.projectName}`;
+  projectEmployeesList.innerHTML = "";
+
+  const assignedEmployees = [];
+
+  monthData.employees.forEach((employee) => {
+    if (!employee.assignments) {
+      return;
+    }
+
+    employee.assignments.forEach((assignment) => {
+      if (assignment.projectId === projectId) {
+        assignedEmployees.push({
+          employee,
+          assignment,
+        });
+      }
+    });
+  });
+
+  if (assignedEmployees.length === 0) {
+    projectEmployeesList.innerHTML = `
+      <p>No employees assigned to this project.</p>
+    `;
+  } else {
+    assignedEmployees.forEach(({ employee, assignment }) => {
+      const employeeItem = document.createElement("div");
+
+      employeeItem.classList.add("project-employee-item");
+
+      employeeItem.innerHTML = `
+        <strong>${employee.name} ${employee.surname}</strong>
+
+        <div class="project-employee-info">
+          Position: ${employee.position}
+        </div>
+
+        <div class="project-employee-info">
+          Salary: $${Number(employee.salary).toFixed(2)}
+        </div>
+
+        <div class="project-employee-info">
+          Capacity: ${assignment.capacity}
+        </div>
+
+        <div class="project-employee-info">
+          Fit: ${assignment.fit}
+        </div>
+      `;
+
+      projectEmployeesList.append(employeeItem);
+    });
+  }
+
+  projectEmployeesModal.classList.remove("hidden");
+}
+
+function closeProjectEmployeesModal() {
+  projectEmployeesModal.classList.add("hidden");
+  projectEmployeesList.innerHTML = "";
+}
+
+closeProjectEmployeesModalButton.addEventListener("click", () => {
+  closeProjectEmployeesModal();
+});
+
+cancelProjectEmployeesModalButton.addEventListener("click", () => {
+  closeProjectEmployeesModal();
+});
+
+projectEmployeesModal.addEventListener("click", (event) => {
+  if (event.target === projectEmployeesModal) {
+    closeProjectEmployeesModal();
+  }
+});

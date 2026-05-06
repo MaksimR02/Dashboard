@@ -49,7 +49,11 @@ export function renderProjectsTable(monthData) {
       <td>${formatMoney(project.budget)}</td>
       <td>${projectFinancials.usedCapacity.toFixed(1)} / ${project.employeeCapacity}</td>
       <td>
-        <button type="button" class="show-employees-btn">
+        <button
+          type="button"
+          class="show-employees-btn"
+          data-project-id="${project.id}"
+        >
           Show Employees (${assignedEmployees.length})
         </button>
       </td>
