@@ -76,6 +76,23 @@ const employeeSubmitButton = employeeForm.querySelector(".primary-btn");
 
 let editingEmployeeId = null;
 
+const assignmentModal = document.querySelector("#assignment-modal");
+const assignmentForm = document.querySelector("#assignment-form");
+const closeAssignmentModalButton = document.querySelector(
+  "#close-assignment-modal-btn",
+);
+const cancelAssignmentModalButton = document.querySelector(
+  "#cancel-assignment-modal-btn",
+);
+const assignmentProjectSelect = document.querySelector("#assignment-project");
+const assignmentCapacityInput = document.querySelector("#assignment-capacity");
+const assignmentFitInput = document.querySelector("#assignment-fit");
+
+let assigningEmployeeId = null;
+
+
+
+
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
   openButton.classList.remove("hidden");
@@ -406,6 +423,25 @@ projectsTable.addEventListener("click", (event) => {
 });
 
 employeesTable.addEventListener("click", (event) => {
+  const removeAssignmentButton = event.target.closest(".remove-assignment-btn");
+
+  if (removeAssignmentButton) {
+    const employeeId = removeAssignmentButton.dataset.employeeId;
+    const projectId = removeAssignmentButton.dataset.projectId;
+
+    removeAssignment(employeeId, projectId);
+    return;
+  }
+
+  const assignButton = event.target.closest(".assign-project-btn");
+
+  if (assignButton) {
+    const employeeId = assignButton.dataset.employeeId;
+
+    openAssignmentModal(employeeId);
+    return;
+  }
+
   const editButton = event.target.closest(".edit-employee-btn");
 
   if (editButton) {
@@ -465,4 +501,118 @@ function startEditEmployee(employeeId) {
   }
 
   openEditEmployeeModal(employeeToEdit);
+}
+
+function openAssignmentModal(employeeId) {
+  const monthData = getCurrentMonthData();
+
+  assigningEmployeeId = employeeId;
+
+  renderAssignmentProjectOptions(monthData.projects);
+
+  assignmentModal.classList.remove("hidden");
+}
+
+function closeAssignmentModal() {
+  assignmentModal.classList.add("hidden");
+  assignmentForm.reset();
+
+  assigningEmployeeId = null;
+}
+
+closeAssignmentModalButton.addEventListener("click", () => {
+  closeAssignmentModal();
+});
+
+cancelAssignmentModalButton.addEventListener("click", () => {
+  closeAssignmentModal();
+});
+
+assignmentModal.addEventListener("click", (event) => {
+  if (event.target === assignmentModal) {
+    closeAssignmentModal();
+  }
+});
+
+function renderAssignmentProjectOptions(projects) {
+  assignmentProjectSelect.innerHTML = `
+    <option value="">Select project</option>
+  `;
+
+  projects.forEach((project) => {
+    const option = document.createElement("option");
+
+    option.value = project.id;
+    option.textContent = project.projectName;
+
+    assignmentProjectSelect.append(option);
+  });
+}
+
+
+assignmentForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const monthData = getCurrentMonthData();
+
+  const employeeToAssign = monthData.employees.find((employee) => {
+    return employee.id === assigningEmployeeId;
+  });
+
+  if (!employeeToAssign) {
+    return;
+  }
+
+  const assignmentData = {
+    projectId: assignmentProjectSelect.value,
+    capacity: Number(assignmentCapacityInput.value),
+    fit: Number(assignmentFitInput.value),
+  };
+
+  if (!assignmentData.projectId) {
+    return;
+  }
+
+  if (!employeeToAssign.assignments) {
+    employeeToAssign.assignments = [];
+  }
+
+  const existingAssignment = employeeToAssign.assignments.find((assignment) => {
+    return assignment.projectId === assignmentData.projectId;
+  });
+
+  if (existingAssignment) {
+    existingAssignment.capacity = assignmentData.capacity;
+    existingAssignment.fit = assignmentData.fit;
+  } else {
+    employeeToAssign.assignments.push(assignmentData);
+  }
+
+  saveCurrentMonthData(monthData);
+
+  renderProjectsTable(monthData);
+  renderEmployeesTable(monthData);
+
+  closeAssignmentModal();
+});
+
+function removeAssignment(employeeId, projectId) {
+  const monthData = getCurrentMonthData();
+
+  const employeeToUpdate = monthData.employees.find((employee) => {
+    return employee.id === employeeId;
+  });
+
+  if (!employeeToUpdate || !employeeToUpdate.assignments) {
+    return;
+  }
+
+  employeeToUpdate.assignments = employeeToUpdate.assignments.filter((assignment) => {
+    return assignment.projectId !== projectId;
+  });
+
+  saveCurrentMonthData(monthData);
+
+  renderProjectsTable(monthData);
+  renderEmployeesTable(monthData);
 }
