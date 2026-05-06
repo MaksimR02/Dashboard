@@ -146,3 +146,25 @@ th.sortable.sorted {
   font-size: 14px;
   color: #4b5563;
 }
+
+.filters-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-field span {
+  font-weight: 600;
+}
+
+.filter-field input {
+  padding: 8px 10px;
+  border: 1px solid #cfd8dc;
+  border-radius: 4px;
+}
