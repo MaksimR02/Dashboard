@@ -64,6 +64,18 @@ const employeeSalaryInput = document.querySelector("#employee-salary");
 const projectsTable = document.querySelector("#projects-table");
 const employeesTable = document.querySelector("#employees-table");
 
+const projectModalTitle = document.querySelector("#project-modal .modal-header h2");
+const projectSubmitButton = projectForm.querySelector(".primary-btn");
+
+let editingProjectId = null;
+
+const employeeModalTitle = document.querySelector(
+  "#employee-modal .modal-header h2",
+);
+const employeeSubmitButton = employeeForm.querySelector(".primary-btn");
+
+let editingEmployeeId = null;
+
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
   openButton.classList.remove("hidden");
@@ -130,9 +142,27 @@ function openProjectModal() {
   projectModal.classList.remove("hidden");
 }
 
+function openEditProjectModal(project) {
+  editingProjectId = project.id;
+
+  projectModalTitle.textContent = "Edit Project";
+  projectSubmitButton.textContent = "Save Changes";
+
+  projectCompanyNameInput.value = project.companyName;
+  projectNameInput.value = project.projectName;
+  projectBudgetInput.value = project.budget;
+  projectEmployeeCapacityInput.value = project.employeeCapacity;
+
+  projectModal.classList.remove("hidden");
+}
+
 function closeProjectModal() {
-  projectModal.classList.add('hidden');
+  projectModal.classList.add("hidden");
   projectForm.reset();
+
+  editingProjectId = null;
+  projectModalTitle.textContent = "Add Project";
+  projectSubmitButton.textContent = "Save Project";
 }
 
 addProjectButton.addEventListener('click', () => {
@@ -163,19 +193,38 @@ projectForm.addEventListener("submit", (event) => {
 
   const monthData = getCurrentMonthData();
 
-  const newProject = {
-    id: createProjectId(),
+  const projectData = {
     companyName: projectCompanyNameInput.value.trim(),
     projectName: projectNameInput.value.trim(),
     budget: Number(projectBudgetInput.value),
     employeeCapacity: Number(projectEmployeeCapacityInput.value),
   };
 
-  if (!newProject.companyName || !newProject.projectName) {
+  if (!projectData.companyName || !projectData.projectName) {
     return;
   }
 
-  monthData.projects.push(newProject);
+  if (editingProjectId) {
+    const projectToUpdate = monthData.projects.find((project) => {
+      return project.id === editingProjectId;
+    });
+
+    if (!projectToUpdate) {
+      return;
+    }
+
+    projectToUpdate.companyName = projectData.companyName;
+    projectToUpdate.projectName = projectData.projectName;
+    projectToUpdate.budget = projectData.budget;
+    projectToUpdate.employeeCapacity = projectData.employeeCapacity;
+  } else {
+    const newProject = {
+      id: createProjectId(),
+      ...projectData,
+    };
+
+    monthData.projects.push(newProject);
+  }
 
   saveCurrentMonthData(monthData);
 
@@ -192,6 +241,10 @@ function openEmployeeModal() {
 function closeEmployeeModal() {
   employeeModal.classList.add("hidden");
   employeeForm.reset();
+
+  editingEmployeeId = null;
+  employeeModalTitle.textContent = "Add Employee";
+  employeeSubmitButton.textContent = "Save Employee";
 }
 
 addEmployeeButton.addEventListener("click", () => {
@@ -221,21 +274,41 @@ employeeForm.addEventListener("submit", (event) => {
 
   const monthData = getCurrentMonthData();
 
-  const newEmployee = {
-    id: createEmployeeId(),
+  const employeeData = {
     name: employeeNameInput.value.trim(),
     surname: employeeSurnameInput.value.trim(),
     dateOfBirth: employeeDateOfBirthInput.value,
     position: employeePositionInput.value,
     salary: Number(employeeSalaryInput.value),
-    assignments: [],
   };
 
-  if (!newEmployee.name || !newEmployee.surname || !newEmployee.position) {
+  if (!employeeData.name || !employeeData.surname || !employeeData.position) {
     return;
   }
 
-  monthData.employees.push(newEmployee);
+  if (editingEmployeeId) {
+    const employeeToUpdate = monthData.employees.find((employee) => {
+      return employee.id === editingEmployeeId;
+    });
+
+    if (!employeeToUpdate) {
+      return;
+    }
+
+    employeeToUpdate.name = employeeData.name;
+    employeeToUpdate.surname = employeeData.surname;
+    employeeToUpdate.dateOfBirth = employeeData.dateOfBirth;
+    employeeToUpdate.position = employeeData.position;
+    employeeToUpdate.salary = employeeData.salary;
+  } else {
+    const newEmployee = {
+      id: createEmployeeId(),
+      ...employeeData,
+      assignments: [],
+    };
+
+    monthData.employees.push(newEmployee);
+  }
 
   saveCurrentMonthData(monthData);
 
@@ -314,26 +387,82 @@ function deleteEmployee(employeeId) {
 }
 
 projectsTable.addEventListener("click", (event) => {
-  const deleteButton = event.target.closest(".delete-project-btn");
+  const editButton = event.target.closest(".edit-project-btn");
 
-  if (!deleteButton) {
+  if (editButton) {
+    const projectId = editButton.dataset.projectId;
+
+    startEditProject(projectId);
     return;
   }
 
-  const projectId = deleteButton.dataset.projectId;
+  const deleteButton = event.target.closest(".delete-project-btn");
 
-  deleteProject(projectId);
+  if (deleteButton) {
+    const projectId = deleteButton.dataset.projectId;
+
+    deleteProject(projectId);
+  }
 });
 
 employeesTable.addEventListener("click", (event) => {
-  const deleteButton = event.target.closest(".delete-employee-btn");
+  const editButton = event.target.closest(".edit-employee-btn");
 
-  if (!deleteButton) {
+  if (editButton) {
+    const employeeId = editButton.dataset.employeeId;
+
+    startEditEmployee(employeeId);
     return;
   }
 
-  const employeeId = deleteButton.dataset.employeeId;
+  const deleteButton = event.target.closest(".delete-employee-btn");
 
-  deleteEmployee(employeeId);
+  if (deleteButton) {
+    const employeeId = deleteButton.dataset.employeeId;
+
+    deleteEmployee(employeeId);
+  }
 });
 
+function startEditProject(projectId) {
+  const monthData = getCurrentMonthData();
+
+  const projectToEdit = monthData.projects.find((project) => {
+    return project.id === projectId;
+  });
+
+  if (!projectToEdit) {
+    return;
+  }
+
+  openEditProjectModal(projectToEdit);
+}
+
+function openEditEmployeeModal(employee) {
+  editingEmployeeId = employee.id;
+
+  employeeModalTitle.textContent = "Edit Employee";
+  employeeSubmitButton.textContent = "Save Changes";
+
+  employeeNameInput.value = employee.name;
+  employeeSurnameInput.value = employee.surname;
+  employeeDateOfBirthInput.value = employee.dateOfBirth;
+  employeePositionInput.value = employee.position;
+  employeeSalaryInput.value = employee.salary;
+
+  employeeModal.classList.remove("hidden");
+}
+
+function startEditEmployee(employeeId) {
+  const monthData = getCurrentMonthData();
+
+  const employeeToEdit = monthData.employees.find((employee) => {
+    return employee.id === employeeId;
+  });
+
+  if (!employeeToEdit) {
+    return;
+  }
+
+  openEditEmployeeModal(employeeToEdit);
+}
