@@ -78,8 +78,17 @@ export function renderEmployeesTable(monthData) {
       <td>
         <button
           type="button"
+          class="edit-btn edit-employee-btn"
+          data-employee-id="${employee.id}"
+        >
+          Edit
+        </button>
+
+        <button
+          type="button"
           class="delete-btn delete-employee-btn"
-          data-employee-id="${employee.id}">
+          data-employee-id="${employee.id}"
+        >
           Delete
         </button>
       </td>
