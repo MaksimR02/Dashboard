@@ -76,7 +76,10 @@ export function renderEmployeesTable(monthData) {
       <td>${projectNames}</td>
       <td>${formatMoney(projectedIncome)}</td>
       <td>
-        <button type="button" class="delete-btn">
+        <button
+          type="button"
+          class="delete-btn delete-employee-btn"
+          data-employee-id="${employee.id}">
           Delete
         </button>
       </td>

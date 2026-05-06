@@ -61,6 +61,9 @@ const employeeDateOfBirthInput = document.querySelector(
 const employeePositionInput = document.querySelector("#employee-position");
 const employeeSalaryInput = document.querySelector("#employee-salary");
 
+const projectsTable = document.querySelector("#projects-table");
+const employeesTable = document.querySelector("#employees-table");
+
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
   openButton.classList.remove("hidden");
@@ -241,3 +244,96 @@ employeeForm.addEventListener("submit", (event) => {
 
   closeEmployeeModal();
 });
+
+function deleteProject(projectId) {
+  const monthData = getCurrentMonthData();
+
+  const projectToDelete = monthData.projects.find((project) => {
+    return project.id === projectId;
+  });
+
+  if (!projectToDelete) {
+    return;
+  }
+
+  const isConfirmed = confirm(
+    `Are you sure you want to delete project "${projectToDelete.projectName}"?`,
+  );
+
+  if (!isConfirmed) {
+    return;
+  }
+
+  monthData.projects = monthData.projects.filter((project) => {
+    return project.id !== projectId;
+  });
+
+  monthData.employees.forEach((employee) => {
+    if (!employee.assignments) {
+      return;
+    }
+
+    employee.assignments = employee.assignments.filter((assignment) => {
+      return assignment.projectId !== projectId;
+    });
+  });
+
+  saveCurrentMonthData(monthData);
+
+  renderProjectsTable(monthData);
+  renderEmployeesTable(monthData);
+}
+
+function deleteEmployee(employeeId) {
+  const monthData = getCurrentMonthData();
+
+  const employeeToDelete = monthData.employees.find((employee) => {
+    return employee.id === employeeId;
+  });
+
+  if (!employeeToDelete) {
+    return;
+  }
+
+  const isConfirmed = confirm(
+    `Are you sure you want to delete employee "${employeeToDelete.name} ${employeeToDelete.surname}"?`,
+  );
+
+  if (!isConfirmed) {
+    return;
+  }
+
+  monthData.employees = monthData.employees.filter((employee) => {
+    return employee.id !== employeeId;
+  });
+
+  saveCurrentMonthData(monthData);
+
+  renderProjectsTable(monthData);
+  renderEmployeesTable(monthData);
+}
+
+projectsTable.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest(".delete-project-btn");
+
+  if (!deleteButton) {
+    return;
+  }
+
+  const projectId = deleteButton.dataset.projectId;
+
+  deleteProject(projectId);
+});
+
+employeesTable.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest(".delete-employee-btn");
+
+  if (!deleteButton) {
+    return;
+  }
+
+  const employeeId = deleteButton.dataset.employeeId;
+
+  deleteEmployee(employeeId);
+});
+
