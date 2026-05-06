@@ -48,7 +48,7 @@
                     <h1>Projects</h1>
                     <div class="">
                         <button id="add-project-btn" class="add-btn">+Add Project</button>
-                        
+
                         <div id="project-modal" class="modal hidden">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -154,6 +154,58 @@
                     <button id="add-employee-btn" class="add-btn">
                         +Add Employee
                     </button>
+                    <div id="employee-modal" class="modal hidden">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Add Employee</h2>
+                                <button type="button" id="close-employee-modal-btn" class="modal-close-btn">
+                                    ×
+                                </button>
+                            </div>
+
+                            <form id="employee-form" class="modal-form">
+                                <label class="form-field">
+                                    <span>Name</span>
+                                    <input type="text" id="employee-name" name="name" required />
+                                </label>
+
+                                <label class="form-field">
+                                    <span>Surname</span>
+                                    <input type="text" id="employee-surname" name="surname" required />
+                                </label>
+
+                                <label class="form-field">
+                                    <span>Date of Birth</span>
+                                    <input type="date" id="employee-date-of-birth" name="dateOfBirth" required />
+                                </label>
+
+                                <label class="form-field">
+                                    <span>Position</span>
+                                    <select id="employee-position" name="position" required>
+                                        <option value="">Select position</option>
+                                        <option value="Senior Developer">Senior Developer</option>
+                                        <option value="Middle Developer">Middle Developer</option>
+                                        <option value="Junior Developer">Junior Developer</option>
+                                    </select>
+                                </label>
+
+                                <label class="form-field">
+                                    <span>Salary</span>
+                                    <input type="number" id="employee-salary" name="salary" min="0" required />
+                                </label>
+
+                                <div class="modal-actions">
+                                    <button type="button" id="cancel-employee-modal-btn" class="secondary-btn">
+                                        Cancel
+                                    </button>
+
+                                    <button type="submit" class="primary-btn">
+                                        Save Employee
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="employee-filters-container" class="filters-container"></div>

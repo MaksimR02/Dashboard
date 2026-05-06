@@ -43,6 +43,24 @@ const projectEmployeeCapacityInput = document.querySelector(
   "#project-employee-capacity",
 );
 
+const addEmployeeButton = document.querySelector("#add-employee-btn");
+const employeeModal = document.querySelector("#employee-modal");
+const closeEmployeeModalButton = document.querySelector(
+  "#close-employee-modal-btn",
+);
+const cancelEmployeeModalButton = document.querySelector(
+  "#cancel-employee-modal-btn",
+);
+const employeeForm = document.querySelector("#employee-form");
+
+const employeeNameInput = document.querySelector("#employee-name");
+const employeeSurnameInput = document.querySelector("#employee-surname");
+const employeeDateOfBirthInput = document.querySelector(
+  "#employee-date-of-birth",
+);
+const employeePositionInput = document.querySelector("#employee-position");
+const employeeSalaryInput = document.querySelector("#employee-salary");
+
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
   openButton.classList.remove("hidden");
@@ -162,4 +180,64 @@ projectForm.addEventListener("submit", (event) => {
   renderEmployeesTable(monthData);
 
   closeProjectModal();
+});
+
+function openEmployeeModal() {
+  employeeModal.classList.remove("hidden");
+}
+
+function closeEmployeeModal() {
+  employeeModal.classList.add("hidden");
+  employeeForm.reset();
+}
+
+addEmployeeButton.addEventListener("click", () => {
+  openEmployeeModal();
+});
+
+closeEmployeeModalButton.addEventListener("click", () => {
+  closeEmployeeModal();
+});
+
+cancelEmployeeModalButton.addEventListener("click", () => {
+  closeEmployeeModal();
+});
+
+employeeModal.addEventListener("click", (event) => {
+  if (event.target === employeeModal) {
+    closeEmployeeModal();
+  }
+});
+
+function createEmployeeId() {
+  return `employee-${Date.now()}`;
+}
+
+employeeForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const monthData = getCurrentMonthData();
+
+  const newEmployee = {
+    id: createEmployeeId(),
+    name: employeeNameInput.value.trim(),
+    surname: employeeSurnameInput.value.trim(),
+    dateOfBirth: employeeDateOfBirthInput.value,
+    position: employeePositionInput.value,
+    salary: Number(employeeSalaryInput.value),
+    assignments: [],
+  };
+
+  if (!newEmployee.name || !newEmployee.surname || !newEmployee.position) {
+    return;
+  }
+
+  monthData.employees.push(newEmployee);
+
+  saveCurrentMonthData(monthData);
+
+  renderProjectsTable(monthData);
+  renderEmployeesTable(monthData);
+
+  closeEmployeeModal();
 });
