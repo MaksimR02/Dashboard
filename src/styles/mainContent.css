@@ -105,3 +105,22 @@ th.sortable.sorted {
 .total-income-info .total-amount.negative-income {
     color: var(--color-red);
 }
+
+.employee-project-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-right: 8px;
+  padding: 4px 8px;
+  border-radius: 12px;
+
+  background-color: #e5e7eb;
+}
+
+.remove-assignment-btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: 700;
+}

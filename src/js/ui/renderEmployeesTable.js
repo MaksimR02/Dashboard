@@ -38,7 +38,7 @@ function getEmployeeProjects(employee, projects) {
     );
 
     if (project) {
-      employeeProjects.push(project.projectName);
+      employeeProjects.push(project);
     }
   });
 
@@ -56,7 +56,28 @@ export function renderEmployeesTable(monthData) {
 
   monthData.employees.forEach((employee) => {
     const employeeProjects = getEmployeeProjects(employee, monthData.projects);
-    const projectNames = employeeProjects.join(", ") || "-";
+
+    let projectNames = "-";
+
+    if (employeeProjects.length > 0) {
+      projectNames = "";
+
+      employeeProjects.forEach((project) => {
+        projectNames += `
+      <span class="employee-project-tag">
+        ${project.projectName}
+        <button
+          type="button"
+          class="remove-assignment-btn"
+          data-employee-id="${employee.id}"
+          data-project-id="${project.id}"
+        >
+          ×
+        </button>
+      </span>
+    `;
+      });
+    }
 
     const estimatedPayment = calculateEmployeeEstimatedPayment(employee);
     const projectedIncome = calculateEmployeeProjectedIncome(
@@ -76,6 +97,14 @@ export function renderEmployeesTable(monthData) {
       <td>${projectNames}</td>
       <td>${formatMoney(projectedIncome)}</td>
       <td>
+        <button
+          type="button"
+          class="assign-btn assign-project-btn"
+          data-employee-id="${employee.id}"
+        >
+          Assign Project
+        </button>
+
         <button
           type="button"
           class="edit-btn edit-employee-btn"
