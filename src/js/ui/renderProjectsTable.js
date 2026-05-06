@@ -25,7 +25,78 @@ function formatMoney(value) {
   return `$${Number(value).toFixed(2)}`;
 }
 
-export function renderProjectsTable(monthData) {
+function getProjectSortValue(project, sortBy, monthData) {
+  const projectFinancials = calculateProjectFinancials(project, monthData);
+
+  if (sortBy === "companyName") {
+    return project.companyName.toLowerCase();
+  }
+
+  if (sortBy === "projectName") {
+    return project.projectName.toLowerCase();
+  }
+
+  if (sortBy === "budget") {
+    return project.budget;
+  }
+
+  if (sortBy === "employeeCapacity") {
+    return project.employeeCapacity;
+  }
+
+  if (sortBy === "estimatedIncome") {
+    return projectFinancials.income;
+  }
+
+  return "";
+}
+
+function sortProjects(projects, sortState, monthData) {
+  const sortedProjects = [...projects];
+
+  if (!sortState.sortBy) {
+    return sortedProjects;
+  }
+
+  sortedProjects.sort((firstProject, secondProject) => {
+    const firstValue = getProjectSortValue(
+      firstProject,
+      sortState.sortBy,
+      monthData,
+    );
+
+    const secondValue = getProjectSortValue(
+      secondProject,
+      sortState.sortBy,
+      monthData,
+    );
+
+    const direction = sortState.sortDirection === "asc" ? 1 : -1;
+
+    if (typeof firstValue === "string") {
+      return firstValue.localeCompare(secondValue) * direction;
+    }
+
+    return (firstValue - secondValue) * direction;
+  });
+
+  return sortedProjects;
+}
+
+function filterProjects(projects, filters) {
+  return projects.filter((project) => {
+    const companyName = project.companyName.toLowerCase();
+    const projectName = project.projectName.toLowerCase();
+
+    const companyNameMatches = companyName.includes(filters.companyName);
+    const projectNameMatches = projectName.includes(filters.projectName);
+
+    return companyNameMatches && projectNameMatches;
+  });
+}
+
+
+export function renderProjectsTable(monthData, sortState = {}) {
   const tableBody = document.querySelector("#projects-table tbody");
 
   if (!tableBody) {
@@ -34,7 +105,20 @@ export function renderProjectsTable(monthData) {
 
   tableBody.innerHTML = "";
 
-  monthData.projects.forEach((project) => {
+    
+
+  const filteredProjects = filterProjects(
+  monthData.projects,
+  sortState.filters,
+);
+
+const projectsToRender = sortProjects(
+  filteredProjects,
+  sortState,
+  monthData,
+);
+
+projectsToRender.forEach((project) => {
     const assignedEmployees = getAssignedEmployees(
       project.id,
       monthData.employees,

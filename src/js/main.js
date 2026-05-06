@@ -31,9 +31,29 @@ const cancelProjectModalButton = document.querySelector(
 );
 const projectForm = document.querySelector("#project-form");
 
+const projectsTableState = {
+  sortBy: null,
+  sortDirection: "asc",
+  filters: {
+    companyName: "",
+    projectName: "",
+  },
+};
+
+const employeesTableState = {
+  sortBy: null,
+  sortDirection: "asc",
+  filters: {
+    name: "",
+    surname: "",
+    position: "",
+    project: "",
+  },
+};
+
 const initialMonthData = getCurrentMonthData();
-renderProjectsTable(initialMonthData);
-renderEmployeesTable(initialMonthData);
+renderProjectsTable(initialMonthData, projectsTableState);
+renderEmployeesTable(initialMonthData, employeesTableState);
 
 
 const projectCompanyNameInput = document.querySelector("#project-company-name");
@@ -104,6 +124,21 @@ const cancelProjectEmployeesModalButton = document.querySelector(
   "#cancel-project-employees-modal-btn",
 );
 
+const projectCompanyFilterInput = document.querySelector("#project-company-filter");
+const projectNameFilterInput = document.querySelector("#project-name-filter");
+
+
+const employeeNameFilterInput = document.querySelector("#employee-name-filter");
+const employeeSurnameFilterInput = document.querySelector(
+  "#employee-surname-filter",
+);
+const employeePositionFilterInput = document.querySelector(
+  "#employee-position-filter",
+);
+const employeeProjectFilterInput = document.querySelector(
+  "#employee-project-filter",
+);
+
 
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
@@ -141,7 +176,7 @@ monthSelect.addEventListener("change", () => {
 
   const selectedPeriodData = getCurrentMonthData();
 
-  renderProjectsTable(selectedPeriodData);
+  renderProjectsTable(selectedPeriodData, projectsTableState);
   renderEmployeesTable(selectedPeriodData);
 
   console.log("selected period data", selectedPeriodData);
@@ -152,16 +187,76 @@ yearSelect.addEventListener("change", () => {
 
   const selectedPeriodData = getCurrentMonthData();
 
-  renderProjectsTable(selectedPeriodData);
+  renderProjectsTable(selectedPeriodData, projectsTableState);
   renderEmployeesTable(selectedPeriodData);
 
   console.log("selected period data", selectedPeriodData);
 });
 
+projectCompanyFilterInput.addEventListener("input", () => {
+  projectsTableState.filters.companyName = projectCompanyFilterInput.value
+    .trim()
+    .toLowerCase();
+
+  const monthData = getCurrentMonthData();
+
+  renderProjectsTable(monthData, projectsTableState);
+});
+
+projectNameFilterInput.addEventListener("input", () => {
+  projectsTableState.filters.projectName = projectNameFilterInput.value
+    .trim()
+    .toLowerCase();
+
+  const monthData = getCurrentMonthData();
+
+  renderProjectsTable(monthData, projectsTableState);
+});
+
+employeeNameFilterInput.addEventListener("input", () => {
+  employeesTableState.filters.name = employeeNameFilterInput.value
+    .trim()
+    .toLowerCase();
+
+  const monthData = getCurrentMonthData();
+
+  renderEmployeesTable(monthData, employeesTableState);
+});
+
+employeeSurnameFilterInput.addEventListener("input", () => {
+  employeesTableState.filters.surname = employeeSurnameFilterInput.value
+    .trim()
+    .toLowerCase();
+
+  const monthData = getCurrentMonthData();
+
+  renderEmployeesTable(monthData, employeesTableState);
+});
+
+employeePositionFilterInput.addEventListener("input", () => {
+  employeesTableState.filters.position = employeePositionFilterInput.value
+    .trim()
+    .toLowerCase();
+
+  const monthData = getCurrentMonthData();
+
+  renderEmployeesTable(monthData, employeesTableState);
+});
+
+employeeProjectFilterInput.addEventListener("input", () => {
+  employeesTableState.filters.project = employeeProjectFilterInput.value
+    .trim()
+    .toLowerCase();
+
+  const monthData = getCurrentMonthData();
+
+  renderEmployeesTable(monthData, employeesTableState);
+});
+
 seedDataButton.addEventListener("click", () => {
   const seededData = seedCurrentMonthData();
 
-  renderProjectsTable(seededData);
+  renderProjectsTable(seededData, projectsTableState);
   renderEmployeesTable(seededData);
 
   console.log("seed data added:", seededData);
@@ -257,8 +352,8 @@ projectForm.addEventListener("submit", (event) => {
 
   saveCurrentMonthData(monthData);
 
-  renderProjectsTable(monthData);
-  renderEmployeesTable(monthData);
+  renderProjectsTable(monthData, projectsTableState);
+  renderEmployeesTable(monthData, employeesTableState);
 
   closeProjectModal();
 });
@@ -341,8 +436,8 @@ employeeForm.addEventListener("submit", (event) => {
 
   saveCurrentMonthData(monthData);
 
-  renderProjectsTable(monthData);
-  renderEmployeesTable(monthData);
+  renderProjectsTable(monthData, projectsTableState);
+  renderEmployeesTable(monthData, employeesTableState);
 
   closeEmployeeModal();
 });
@@ -382,8 +477,8 @@ function deleteProject(projectId) {
 
   saveCurrentMonthData(monthData);
 
-  renderProjectsTable(monthData);
-  renderEmployeesTable(monthData);
+  renderProjectsTable(monthData, projectsTableState);
+  renderEmployeesTable(monthData, employeesTableState);
 }
 
 function deleteEmployee(employeeId) {
@@ -411,11 +506,30 @@ function deleteEmployee(employeeId) {
 
   saveCurrentMonthData(monthData);
 
-  renderProjectsTable(monthData);
-  renderEmployeesTable(monthData);
+  renderProjectsTable(monthData, projectsTableState);
+  renderEmployeesTable(monthData, employeesTableState);
 }
 
 projectsTable.addEventListener("click", (event) => {
+  const sortHeader = event.target.closest("th.sortable");
+
+  if (sortHeader) {
+    const sortBy = sortHeader.dataset.sort;
+
+    if (projectsTableState.sortBy === sortBy) {
+      projectsTableState.sortDirection =
+        projectsTableState.sortDirection === "asc" ? "desc" : "asc";
+    } else {
+      projectsTableState.sortBy = sortBy;
+      projectsTableState.sortDirection = "asc";
+    }
+
+    const monthData = getCurrentMonthData();
+
+    renderProjectsTable(monthData, projectsTableState);
+    return;
+  }
+
   const showEmployeesButton = event.target.closest(".show-employees-btn");
 
   if (showEmployeesButton) {
@@ -444,6 +558,32 @@ projectsTable.addEventListener("click", (event) => {
 });
 
 employeesTable.addEventListener("click", (event) => {
+
+employeesTable.addEventListener("click", (event) => {
+  const sortHeader = event.target.closest("th.sortable");
+
+  if (sortHeader) {
+    const sortBy = sortHeader.dataset.sort;
+
+    if (employeesTableState.sortBy === sortBy) {
+      employeesTableState.sortDirection =
+        employeesTableState.sortDirection === "asc" ? "desc" : "asc";
+    } else {
+      employeesTableState.sortBy = sortBy;
+      employeesTableState.sortDirection = "asc";
+    }
+
+    const monthData = getCurrentMonthData();
+
+    renderEmployeesTable(monthData, employeesTableState);
+    return;
+  }
+
+  const removeAssignmentButton = event.target.closest(".remove-assignment-btn");
+
+  
+});
+
   const removeAssignmentButton = event.target.closest(".remove-assignment-btn");
 
   if (removeAssignmentButton) {
@@ -611,8 +751,8 @@ assignmentForm.addEventListener("submit", (event) => {
 
   saveCurrentMonthData(monthData);
 
-  renderProjectsTable(monthData);
-  renderEmployeesTable(monthData);
+  renderProjectsTable(monthData, projectsTableState);
+  renderEmployeesTable(monthData, employeesTableState);
 
   closeAssignmentModal();
 });
@@ -634,8 +774,8 @@ function removeAssignment(employeeId, projectId) {
 
   saveCurrentMonthData(monthData);
 
-  renderProjectsTable(monthData);
-  renderEmployeesTable(monthData);
+  renderProjectsTable(monthData, projectsTableState);
+  renderEmployeesTable(monthData, employeesTableState);
 }
 
 function openProjectEmployeesModal(projectId) {
