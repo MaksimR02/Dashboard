@@ -192,7 +192,6 @@ monthSelect.addEventListener("change", () => {
   renderProjectsTable(selectedPeriodData, projectsTableState);
   renderEmployeesTable(selectedPeriodData);
 
-  console.log("selected period data", selectedPeriodData);
 });
 
 yearSelect.addEventListener("change", () => {
@@ -203,7 +202,6 @@ yearSelect.addEventListener("change", () => {
   renderProjectsTable(selectedPeriodData, projectsTableState);
   renderEmployeesTable(selectedPeriodData);
 
-  console.log("selected period data", selectedPeriodData);
 });
 
 projectCompanyFilterInput.addEventListener("input", () => {
@@ -272,7 +270,6 @@ seedDataButton.addEventListener("click", () => {
   renderProjectsTable(seededData, projectsTableState);
   renderEmployeesTable(seededData);
 
-  console.log("seed data added:", seededData);
 });
 
 function openProjectModal() {
