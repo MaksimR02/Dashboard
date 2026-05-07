@@ -209,6 +209,14 @@ employeesToRender.forEach((employee) => {
       <td>
         <button
           type="button"
+          class="vacation-btn employee-vacation-btn"
+          data-employee-id="${employee.id}"
+        >
+          Vacation
+        </button>
+
+        <button
+          type="button"
           class="assign-btn assign-project-btn"
           data-employee-id="${employee.id}"
         >

@@ -139,6 +139,19 @@ const employeeProjectFilterInput = document.querySelector(
   "#employee-project-filter",
 );
 
+const vacationModal = document.querySelector("#vacation-modal");
+const vacationModalTitle = document.querySelector("#vacation-modal-title");
+const vacationForm = document.querySelector("#vacation-form");
+const closeVacationModalButton = document.querySelector(
+  "#close-vacation-modal-btn",
+);
+const cancelVacationModalButton = document.querySelector(
+  "#cancel-vacation-modal-btn",
+);
+const vacationDaysInput = document.querySelector("#vacation-days");
+
+let vacationEmployeeId = null;
+
 
 toggleButton.addEventListener("click", () => {
   sidePanel.classList.add("collapsed");
@@ -558,8 +571,6 @@ projectsTable.addEventListener("click", (event) => {
 });
 
 employeesTable.addEventListener("click", (event) => {
-
-employeesTable.addEventListener("click", (event) => {
   const sortHeader = event.target.closest("th.sortable");
 
   if (sortHeader) {
@@ -579,10 +590,14 @@ employeesTable.addEventListener("click", (event) => {
     return;
   }
 
-  const removeAssignmentButton = event.target.closest(".remove-assignment-btn");
+  const vacationButton = event.target.closest(".employee-vacation-btn");
 
-  
-});
+  if (vacationButton) {
+    const employeeId = vacationButton.dataset.employeeId;
+
+    openVacationModal(employeeId);
+    return;
+  }
 
   const removeAssignmentButton = event.target.closest(".remove-assignment-btn");
 
@@ -863,4 +878,68 @@ projectEmployeesModal.addEventListener("click", (event) => {
   if (event.target === projectEmployeesModal) {
     closeProjectEmployeesModal();
   }
+});
+
+function openVacationModal(employeeId) {
+  const monthData = getCurrentMonthData();
+
+  const employee = monthData.employees.find((employee) => {
+    return employee.id === employeeId;
+  });
+
+  if (!employee) {
+    return;
+  }
+
+  vacationEmployeeId = employeeId;
+
+  vacationModalTitle.textContent = `Vacation for ${employee.name} ${employee.surname}`;
+  vacationDaysInput.value = employee.vacationDays || 0;
+
+  vacationModal.classList.remove("hidden");
+}
+
+function closeVacationModal() {
+  vacationModal.classList.add("hidden");
+  vacationForm.reset();
+
+  vacationEmployeeId = null;
+  vacationModalTitle.textContent = "Employee Vacation";
+}
+
+closeVacationModalButton.addEventListener("click", () => {
+  closeVacationModal();
+});
+
+cancelVacationModalButton.addEventListener("click", () => {
+  closeVacationModal();
+});
+
+vacationModal.addEventListener("click", (event) => {
+  if (event.target === vacationModal) {
+    closeVacationModal();
+  }
+});
+
+vacationForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const monthData = getCurrentMonthData();
+
+  const employeeToUpdate = monthData.employees.find((employee) => {
+    return employee.id === vacationEmployeeId;
+  });
+
+  if (!employeeToUpdate) {
+    return;
+  }
+
+  employeeToUpdate.vacationDays = Number(vacationDaysInput.value);
+
+  saveCurrentMonthData(monthData);
+
+  renderProjectsTable(monthData, projectsTableState);
+  renderEmployeesTable(monthData, employeesTableState);
+
+  closeVacationModal();
 });
