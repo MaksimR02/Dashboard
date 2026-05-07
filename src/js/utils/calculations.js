@@ -1,5 +1,21 @@
+import { appState } from "../state/appState.js";
+
+function getDaysInSelectedMonth() {
+  return new Date(appState.currentYear, appState.currentMonth + 1, 0).getDate();
+}
+
 function getVacationCoefficient(employee, assignment, monthData) {
-  return 1;
+  const daysInMonth = getDaysInSelectedMonth();
+  const vacationDays = Number(employee.vacationDays) || 0;
+
+  const safeVacationDays = Math.min(
+    Math.max(vacationDays, 0),
+    daysInMonth,
+  );
+
+  const workingDays = daysInMonth - safeVacationDays;
+
+  return workingDays / daysInMonth;
 }
 
 const MIN_PAYMENT_CAPACITY = 0.5;

@@ -365,6 +365,35 @@
         </div>
     </div>
 
+    <div id="vacation-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="vacation-modal-title">Employee Vacation</h2>
+
+                <button type="button" id="close-vacation-modal-btn" class="modal-close-btn">
+                    ×
+                </button>
+            </div>
+
+            <form id="vacation-form" class="modal-form">
+                <label class="form-field">
+                    <span>Vacation Days</span>
+                    <input type="number" id="vacation-days" name="vacationDays" min="0" max="31" required />
+                </label>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-vacation-modal-btn" class="secondary-btn">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="primary-btn">
+                        Save Vacation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script type="module" src="src/js/main.js"></script>
 </body>
 
