@@ -320,6 +320,45 @@ projectModal.addEventListener('click', (event) => {
   }
 });
 
+function isValidText(value, minLength = 2) {
+  const trimmedValue = value.trim();
+
+  return trimmedValue.length >= minLength && /\p{L}/u.test(trimmedValue);
+}
+
+function isNumberInRange(value, min, max) {
+  return Number.isFinite(value) && value >= min && value <= max;
+}
+
+function getAgeFromDate(dateOfBirth) {
+  const birthDate = new Date(dateOfBirth);
+  const currentDate = new Date();
+
+  let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+  const isBirthdayNotPassed =
+    currentDate.getMonth() < birthDate.getMonth() ||
+    (
+      currentDate.getMonth() === birthDate.getMonth() &&
+      currentDate.getDate() < birthDate.getDate()
+    );
+
+  if (isBirthdayNotPassed) {
+    age -= 1;
+  }
+
+  return age;
+}
+
+function isValidEmployeeAge(dateOfBirth) {
+  const age = getAgeFromDate(dateOfBirth);
+
+  return Number.isFinite(age) && age >= 16 && age <= 100;
+}
+
+function getDaysInSelectedMonth() {
+  return new Date(appState.currentYear, appState.currentMonth + 1, 0).getDate();
+}
 
 function createProjectId() {
   return `project-${Date.now()}`;
@@ -337,9 +376,25 @@ projectForm.addEventListener("submit", (event) => {
     employeeCapacity: Number(projectEmployeeCapacityInput.value),
   };
 
-  if (!projectData.companyName || !projectData.projectName) {
-    return;
-  }
+  if (!isValidText(projectData.companyName)) {
+  alert("Company name must contain at least 2 characters and include letters.");
+  return;
+}
+
+if (!isValidText(projectData.projectName)) {
+  alert("Project name must contain at least 2 characters and include letters.");
+  return;
+}
+
+if (!isNumberInRange(projectData.budget, 1, 1000000000)) {
+  alert("Budget must be greater than 0.");
+  return;
+}
+
+if (!isNumberInRange(projectData.employeeCapacity, 1, 50)) {
+  alert("Employee capacity must be between 1 and 50.");
+  return;
+}
 
   if (editingProjectId) {
     const projectToUpdate = monthData.projects.find((project) => {
@@ -419,9 +474,30 @@ employeeForm.addEventListener("submit", (event) => {
     salary: Number(employeeSalaryInput.value),
   };
 
-  if (!employeeData.name || !employeeData.surname || !employeeData.position) {
-    return;
-  }
+  if (!isValidText(employeeData.name)) {
+  alert("Employee name must contain at least 2 characters and include letters.");
+  return;
+}
+
+if (!isValidText(employeeData.surname)) {
+  alert("Employee surname must contain at least 2 characters and include letters.");
+  return;
+}
+
+if (!isValidEmployeeAge(employeeData.dateOfBirth)) {
+  alert("Employee age must be between 16 and 100.");
+  return;
+}
+
+if (!employeeData.position) {
+  alert("Please select employee position.");
+  return;
+}
+
+if (!isNumberInRange(employeeData.salary, 1, 1000000000)) {
+  alert("Salary must be greater than 0.");
+  return;
+}
 
   if (editingEmployeeId) {
     const employeeToUpdate = monthData.employees.find((employee) => {
@@ -746,8 +822,19 @@ assignmentForm.addEventListener("submit", (event) => {
   };
 
   if (!assignmentData.projectId) {
-    return;
-  }
+  alert("Please select project.");
+  return;
+}
+
+if (!isNumberInRange(assignmentData.capacity, 0.1, 1)) {
+  alert("Capacity must be between 0.1 and 1.");
+  return;
+}
+
+if (!isNumberInRange(assignmentData.fit, 0.1, 1)) {
+  alert("Fit must be between 0.1 and 1.");
+  return;
+}
 
   if (!employeeToAssign.assignments) {
     employeeToAssign.assignments = [];
@@ -933,6 +1020,16 @@ vacationForm.addEventListener("submit", (event) => {
   if (!employeeToUpdate) {
     return;
   }
+
+  const vacationDays = Number(vacationDaysInput.value);
+const daysInSelectedMonth = getDaysInSelectedMonth();
+
+if (!isNumberInRange(vacationDays, 0, daysInSelectedMonth)) {
+  alert(`Vacation days must be between 0 and ${daysInSelectedMonth}.`);
+  return;
+}
+
+employeeToUpdate.vacationDays = vacationDays;
 
   employeeToUpdate.vacationDays = Number(vacationDaysInput.value);
 
